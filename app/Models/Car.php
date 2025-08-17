@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Car extends Model
+{
+    protected $table = 'cars';
+    protected $fillable = [
+        'make', 'model', 'year', 'spec', 'min_price', 'max_price'
+    ];
+    public $timestamps = false;
+}
