@@ -30,12 +30,12 @@ class CarValuationService
             ];
         }
 
-        // Try web lookup
-        $webService = new WebCarValuationService();
-        $valuation = $webService->lookup($make, $model, $year, $mileage);
-        if ($valuation && isset($valuation['min'], $valuation['max'])) {
-            return $valuation;
-        }
+        // // Try web lookup
+        // $webService = new WebCarValuationService();
+        // $valuation = $webService->lookup($make, $model, $year, $mileage);
+        // if ($valuation && isset($valuation['min'], $valuation['max'])) {
+        //     return $valuation;
+        // }
 
         // Failover: Try external API
         try {
