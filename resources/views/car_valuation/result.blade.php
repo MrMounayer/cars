@@ -13,6 +13,15 @@
                 <a href="/" class="text-sm text-[#1b1b18] dark:text-[#EDEDEC] hover:underline underline-offset-4">Home</a>
                 <a href="{{ route('car-valuation.form') }}" class="text-sm text-[#1a237e] dark:text-[#90caf9] font-semibold underline underline-offset-4">Valuation</a>
                 <a href="{{ route('vin.form') }}" class="text-sm text-[#1b1b18] dark:text-[#EDEDEC] hover:underline underline-offset-4">VIN Decoder</a>
+                @guest
+                    <a href="{{ route('login') }}" class="text-sm text-[#1a237e] hover:underline underline-offset-4">Login</a>
+                    <a href="{{ route('register') }}" class="text-sm text-[#1a237e] hover:underline underline-offset-4">Register</a>
+                @else
+                    <form method="POST" action="{{ route('logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" class="text-sm text-[#1a237e] hover:underline underline-offset-4 ml-2">Logout</button>
+                    </form>
+                @endguest
             </nav>
         </div>
     </header>

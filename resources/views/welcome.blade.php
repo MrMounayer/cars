@@ -21,11 +21,17 @@
                     @if (Route::has('login'))
                         @auth
                             <a href="{{ url('/dashboard') }}" class="px-5 py-1.5 rounded bg-[#1a237e] text-white font-semibold hover:bg-[#0d1335] transition-colors">Dashboard</a>
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                                @csrf
+                                <button type="submit" class="px-5 py-1.5 rounded border border-[#1a237e] text-[#1a237e] font-semibold hover:bg-[#1a237e] hover:text-white transition-colors ml-2">Logout</button>
+                            </form>
                         @else
-                            <a href="{{ route('login') }}" class="px-5 py-1.5 rounded border border-[#1a237e] text-[#1a237e] font-semibold hover:bg-[#1a237e] hover:text-white transition-colors">Log in</a>
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="px-5 py-1.5 rounded border border-[#1b1b18] text-[#1b1b18] dark:border-[#EDEDEC] dark:text-[#EDEDEC] font-semibold hover:bg-[#1b1b18] hover:text-white dark:hover:bg-[#EDEDEC] dark:hover:text-[#1b1b18] transition-colors">Register</a>
-                            @endif
+                            @guest
+                                <a href="{{ route('login') }}" class="px-5 py-1.5 rounded border border-[#1a237e] text-[#1a237e] font-semibold hover:bg-[#1a237e] hover:text-white transition-colors">Log in</a>
+                                @if (Route::has('register'))
+                                    <a href="{{ route('register') }}" class="px-5 py-1.5 rounded border border-[#1b1b18] text-[#1b1b18] dark:border-[#EDEDEC] dark:text-[#EDEDEC] font-semibold hover:bg-[#1b1b18] hover:text-white dark:hover:bg-[#EDEDEC] dark:hover:text-[#1b1b18] transition-colors">Register</a>
+                                @endif
+                            @endguest
                         @endauth
                     @endif
                 </nav>
