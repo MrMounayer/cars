@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysqlcars
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: imy1990
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - appnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_cars
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: imy1990
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - appnet
+
+volumes:
+  mysql_data:
+
+networks:
+  appnet:
