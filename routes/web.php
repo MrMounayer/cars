@@ -67,8 +67,16 @@ Route::middleware(['auth'])->group(function () {
     // Admin panel: Car Valuation & VIN Decoder
     Route::get('/car-valuation', [CarValuationController::class, 'showForm'])->name('car-valuation.form');
     Route::post('/car-valuation', [CarValuationController::class, 'submitForm'])->name('car-valuation.submit');
+    Route::get('/car-valuation/payment', [CarValuationController::class, 'payment'])->name('car-valuation.payment');
+    Route::get('/car-valuation/result', [CarValuationController::class, 'showResult'])->name('car-valuation.showResult');
     Route::get('/vin-decode', [VinDecoderController::class, 'showForm'])->name('vin.form');
     Route::post('/vin-decode', [VinDecoderController::class, 'decode'])->name('vin.decode');
+
+    // Report history dashboard
+    Route::get('/dashboard/reports', [\App\Http\Controllers\ReportHistoryController::class, 'index'])->name('dashboard.reports');
+
+    // VIN PDF download
+    Route::post('/vin-decode/pdf', [\App\Http\Controllers\VinDecoderPdfController::class, 'download'])->name('vin.decode.pdf');
 
     Route::redirect('settings', 'settings/profile');
 
