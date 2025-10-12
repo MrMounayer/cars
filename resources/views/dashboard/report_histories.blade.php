@@ -1,10 +1,5 @@
 <x-layouts.app :title="__('Report History')">
 
-@extends('layouts.app')
-
-@section('title', 'My Report History')
-
-@section('content')
 <div class="max-w-5xl mx-auto py-12 px-4">
     <h1 class="text-3xl font-bold mb-8 text-[#1a237e] dark:text-[#90caf9]">My Report History</h1>
     <div class="overflow-x-auto">
@@ -37,5 +32,5 @@
     </div>
     <div class="mt-6">{{ $reports->links() }}</div>
 </div>
-@endsection
+
 </x-layouts.app>

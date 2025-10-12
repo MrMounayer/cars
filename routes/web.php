@@ -63,6 +63,8 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::get('reports', [\App\Http\Controllers\ReportHistoryController::class, 'index'])->name('reports');
+
 Route::middleware(['auth'])->group(function () {
     // Admin panel: Car Valuation & VIN Decoder
     Route::get('/car-valuation', [CarValuationController::class, 'showForm'])->name('car-valuation.form');
