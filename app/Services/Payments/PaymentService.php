@@ -2,7 +2,7 @@
 
 namespace App\Services\Payments;
 
-use App\Domain\Interfaces\HasIntegrationStatus;
+
 use App\Enums\IntegrationStatus;
 use App\Services\Payments\Drivers\Interfaces\PaymentGatewayDriverInterface;
 use App\Domain\DTOs\InvoiceDTO;
@@ -12,10 +12,10 @@ use App\Services\Payments\Exceptions\PaymentGatewayDriverNotSupported;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class PaymentService implements PaymentGatewayDriverInterface, HasIntegrationStatus
+class PaymentService implements PaymentGatewayDriverInterface
 {
     protected $paymentGateway;
-    public function __construct(protected string $driver, protected array $config = [])
+    public function __construct(protected string $driver="ABT2PAY", protected array $config = [])
     {
         $class = 'App\Services\Payments\Drivers\\' . Str::studly($this->driver) . 'Driver';
 
@@ -25,7 +25,6 @@ class PaymentService implements PaymentGatewayDriverInterface, HasIntegrationSta
         );
 
         $this->paymentGateway = new $class($this->config);
-
     }
 
     public static function for(string $driver, array $config = []): PaymentService

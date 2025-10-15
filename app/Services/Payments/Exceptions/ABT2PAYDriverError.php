@@ -2,7 +2,7 @@
 
 namespace App\Services\Payments\Exceptions;
 
-class PaydDriverError extends \Exception
+class ABT2PAYDriverError extends \Exception
 {
 
 }

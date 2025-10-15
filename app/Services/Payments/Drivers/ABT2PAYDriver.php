@@ -2,13 +2,13 @@
 
 namespace App\Services\Payments\Drivers;
 
-use App\Enums\IntegrationStatus;
+// use App\Enums\IntegrationStatus;
 use App\Services\Payments\Drivers\Interfaces\PaymentGatewayDriverInterface;
 use App\Domain\DTOs\InvoiceDTO;
 use App\Domain\DTOs\InvoiceProductDTO;
 use App\Domain\DTOs\PaymentDTO;
 use App\Domain\DTOs\PaymentStatusDTO;
-use App\Services\Payments\Exceptions\PaydDriverError;
+use App\Services\Payments\Exceptions\ABT2PAYDriverError;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -16,6 +16,8 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
 {
     public function __construct(protected array $config)
     {
+        $this->config["token"] = config('services.abt2pay.key');
+        $this->config["base"] = config('services.abt2pay.url', 'https://api.abt2pay.com/api/v1/');
     }
 
     public function generatePaymentLink(string $return_url, InvoiceDTO $invoice): PaymentDTO
@@ -25,29 +27,20 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
             'email' => $invoice->getEmail(),
             'phone' => $invoice->getPhone(),
             'splitPayment' => false,
-            'customerReferenceNumber' => $invoice->getCustomerReferenceNumber(), //TODO: Implement it with Samir  add quote uid + random 
-            'test' => false,
+            'customerReferenceNumber' => $invoice->getCustomerReferenceNumber(), 
+            'test' => true,
             "callbackUrl" => $return_url,
             'amount' => $invoice->getTotalAmount(),
-            'products' => array_map(function (InvoiceProductDTO $product) {
-                return [
-                    'title' => $product->getTitle(),
-                    'details' => $product->getDetails(),
-                    'amount' => $product->getUnitPrice(),
-                    'vat' => $product->getVATValue(),
-                    'quantity' => $product->getQuantity(),
-                    'total' => $product->getTotalAmount(),
-                ];
-            }, $invoice->getProducts())
+            'products' => $invoice->getProducts()
         ];
 
         $response = Http::withHeaders([
-            'X-Api-Key' => $this->config['token'],
-        ])->post(config('services.payd.base')."payment/create", $data);
+            'X-Api-Key' => config('services.abt2pay.key'),
+        ])->post(config('services.abt2pay.url')."payment/create", $data);
 
         throw_if(
             $response->json('status') == "failed" && !$response->json("alreadyExists"),
-            new PaydDriverError('Payd payment gateway failed: '. $response->json('message'))
+            new ABT2PAYDriverError('Payd payment gateway failed: '. $response->json('message'))
         );
 
         return new PaymentDTO([
@@ -63,13 +56,12 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
         $invoice_id = $request->get("invoiceId");
 
         if(is_null($invoice_id)) return false;
-
         $response = Http::withHeaders([
             'X-Api-Key' => $this->config['token'],
-        ])->get(config('services.payd.base')."payment/status", ["invoiceId" => $invoice_id]);
-
-        $status = $response->json('status') === "success"
-            && $response->json('paymentStatus') === "completed";
+            ])->get(config('services.abt2pay.url')."payment/status", ["invoiceId" => $invoice_id]);
+            
+       
+            $status = $response->json('status') === "success" && $response->json('paymentStatus') === "completed";
 
         return new PaymentStatusDTO([
             "status" => $status,
@@ -83,11 +75,11 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
         $invoice_id = $cancelledInvoiceId ?? null;
 
         if(is_null($invoice_id))
-            throw new PaydDriverError('Invoice ID not found');
+            throw new ABT2PAYDriverError('Invoice ID not found');
 
         $response = Http::withHeaders([
             'X-Api-Key' => $this->config['token'],
-        ])->get(config('services.payd.base')."payment/cancel", ["invoiceId" => $invoice_id]);
+        ])->get(config('services.abt2pay.url')."payment/cancel", ["invoiceId" => $invoice_id]);
 
         $status = $response->json('status') === "success"
             && $response->json('paymentStatus') === "canceled";
@@ -99,11 +91,11 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
         ]);
     }
 
-    public function getStatus(array $request, array $response): IntegrationStatus
-    {
-        return match ($response['status'] ?? null) {
-            "success" => IntegrationStatus::Success, //TODO: Confirm with Payd
-            default => IntegrationStatus::Error,
-        };
-    }
+    // public function getStatus(array $request, array $response): IntegrationStatus
+    // {
+    //     return match ($response['status'] ?? null) {
+    //         "success" => IntegrationStatus::Success, //TODO: Confirm with ABT2PAY
+    //         default => IntegrationStatus::Error,
+    //     };
+    // }
 }

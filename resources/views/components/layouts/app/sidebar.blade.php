@@ -15,9 +15,12 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="clipboard-document-list" :href="route('reports')" :current="request()->routeIs('reports')" wire:navigate>{{ __('Reports') }}</flux:navlist.item>
+                    <flux:navlist.item icon="clipboard-document-list" :href="route('valuation.history')" :current="request()->routeIs('valuation.*')" wire:navigate>{{ __('Valuation History') }}</flux:navlist.item>
+                    <flux:navlist.item icon="clipboard-document-list" :href="route('car-valuation.form')" :current="request()->routeIs('car-valuation.form')" wire:navigate>{{ __('Valuation') }}</flux:navlist.item>
+
                 </flux:navlist.group>
             </flux:navlist>
+            
 
             <flux:spacer />
 

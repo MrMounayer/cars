@@ -1,30 +1,6 @@
 
-
-@extends('layouts.app')
-
-@section('title', 'Car Valuation')
-
-@section('content')
+<x-layouts.app>
 <div class="min-h-screen flex flex-col bg-[#FDFDFC] dark:bg-[#0a0a0a]">
-    <header class="bg-white/80 dark:bg-[#161615]/80 shadow-sm sticky top-0 z-20">
-        <div class="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
-            <a href="/" class="font-bold text-2xl text-[#1a237e] dark:text-[#90caf9]">Car Valuation App</a>
-            <nav class="flex items-center gap-4">
-                <a href="/" class="text-sm text-[#1b1b18] dark:text-[#EDEDEC] hover:underline underline-offset-4">Home</a>
-                <a href="{{ route('car-valuation.form') }}" class="text-sm text-[#1a237e] dark:text-[#90caf9] font-semibold underline underline-offset-4">Valuation</a>
-                <a href="{{ route('vin.form') }}" class="text-sm text-[#1b1b18] dark:text-[#EDEDEC] hover:underline underline-offset-4">VIN Decoder</a>
-                @guest
-                    <a href="{{ route('login') }}" class="text-sm text-[#1a237e] hover:underline underline-offset-4">Login</a>
-                    <a href="{{ route('register') }}" class="text-sm text-[#1a237e] hover:underline underline-offset-4">Register</a>
-                @else
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="text-sm text-[#1a237e] hover:underline underline-offset-4 ml-2">Logout</button>
-                    </form>
-                @endguest
-            </nav>
-        </div>
-    </header>
     <main class="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div class="bg-white/90 dark:bg-[#161615]/90 rounded-xl shadow-lg p-8 w-full max-w-2xl">
             <h1 class="text-3xl font-extrabold mb-4 text-[#1a237e] dark:text-[#90caf9]">Car Valuation Form</h1>
@@ -41,7 +17,12 @@
                 </div>
                 <div>
                     <label for="year" class="block text-sm font-medium mb-1">Year</label>
-                    <input type="number" id="year" name="year" min="1900" max="{{ date('Y') }}" required class="w-full px-4 py-3 border border-[#1a237e] rounded focus:ring-2 focus:ring-[#1a237e] focus:outline-none text-lg" value="{{ old('year') }}">
+                    <select id="year" name="year" required class="w-full px-4 py-3 border border-[#1a237e] rounded focus:ring-2 focus:ring-[#1a237e] focus:outline-none text-lg" x-data x-init="new TomSelect($el, {searchField: 'text'})">
+                        @for ($y = now()->year; $y >= 1970; $y--)
+                            <option value="{{ $y }}" @if(old('year') == $y) selected @endif>{{ $y }}</option>
+                        @endfor
+                    </select>
+                    {{-- <input type="number" id="year" name="year" min="1900" max="{{ date('Y') }}" required class="w-full px-4 py-3 border border-[#1a237e] rounded focus:ring-2 focus:ring-[#1a237e] focus:outline-none text-lg" value="{{ old('year') }}"> --}}
                 </div>
                 <div>
                     <label for="mileage" class="block text-sm font-medium mb-1">Mileage</label>
@@ -55,5 +36,5 @@
         &copy; {{ date('Y') }} Car Valuation App
     </footer>
 </div>
-@endsection
+</x-layouts.app>
 

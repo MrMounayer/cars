@@ -24,6 +24,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'abt2pay' => [
+        'key' => env('ABT2PAY_API_KEY', '9c8abc85-0fda-4218-892c-d06df8e5df72'),
+        'url' => env('ABT2PAY_URL','https://api.abt2pay.com/api/v1/'),
+        'callback' => env('ABT2PAY_CALLBACK_URL', 'webhook/payment'),
+    ],
+
     'resend' => [
         'key' => env('RESEND_KEY'),
     ],

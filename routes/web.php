@@ -5,6 +5,18 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\CarValuationController;
 use App\Http\Controllers\VinDecoderController;
 use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\ValuationHistoryController;
+use App\Http\Controllers\PaymentWebhookController;
+
+// Payment Webhook (no auth required)
+Route::get('/webhook/payment', [PaymentWebhookController::class, 'handle'])->name('webhook.payment');
+
+// Payment result pages
+Route::middleware(['auth'])->group(function () {
+    Route::get('/car-valuation/payment/success/{report}', [CarValuationController::class, 'paymentSuccess'])->name('car-valuation.payment-success');
+    Route::get('/car-valuation/payment/failed', [CarValuationController::class, 'paymentFailed'])->name('car-valuation.payment-failed');
+    Route::get('/car-valuation/process-payment/{report}', [CarValuationController::class, 'processPayment'])->name('car-valuation.process-payment');
+});
 
 // API Token management (admin panel)
 Route::middleware(['auth'])->group(function () {
@@ -67,9 +79,13 @@ Route::get('reports', [\App\Http\Controllers\ReportHistoryController::class, 'in
 
 Route::middleware(['auth'])->group(function () {
     // Admin panel: Car Valuation & VIN Decoder
-    Route::get('/car-valuation', [CarValuationController::class, 'showForm'])->name('car-valuation.form');
+    Route::get('/valuation', [CarValuationController::class, 'showForm'])->name('car-valuation.form');
     Route::post('/car-valuation', [CarValuationController::class, 'submitForm'])->name('car-valuation.submit');
     Route::get('/car-valuation/payment', [CarValuationController::class, 'payment'])->name('car-valuation.payment');
+    
+    // Valuation History Routes
+    Route::get('/valuation/history', [ValuationHistoryController::class, 'index'])->name('valuation.history');
+    Route::get('/valuation/{report}', [ValuationHistoryController::class, 'show'])->name('valuation.show');
     Route::get('/car-valuation/result', [CarValuationController::class, 'showResult'])->name('car-valuation.showResult');
     Route::get('/vin-decode', [VinDecoderController::class, 'showForm'])->name('vin.form');
     Route::post('/vin-decode', [VinDecoderController::class, 'decode'])->name('vin.decode');
