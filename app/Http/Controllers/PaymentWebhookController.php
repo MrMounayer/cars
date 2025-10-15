@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use App\Services\Payments\PaymentService;
-use App\Services\CarValuationService;
+use App\Services\{CarValuationService,VinDecoderService};
 
 
 class PaymentWebhookController extends Controller
 {
 
-    public function __construct(private PaymentService $paymentService, private CarValuationService $valuationService)
+    public function __construct(private PaymentService $paymentService, private CarValuationService $valuationService, private VinDecoderService $vinDecoderService)
     {
         // Optionally apply middleware for security, e.g., verify webhook signature
         // $this->middleware('verify.webhook.signature');
@@ -62,12 +62,25 @@ class PaymentWebhookController extends Controller
                         $report->year,
                         $report->additional_data['mileage'] ?? null
                     );
-                    // dd($valuation);
+                    
+                    
                     $report->min_value = $valuation['min'] ?? null;
                     $report->max_value = $valuation['max'] ?? null;
                     $report->average_value = ($valuation['min'] * 0.4 + $valuation['max'] * 0.6) ?? null;
+                    
+                    if(!empty($report->vin))
+                    {
+                        $vinData = $this->vinDecoderService->decode($report->vin);
+                        if(!empty($vinData))
+                        {
+                            $report->additional_data =$vinData;
+                        }
+                    }
+
+
+                    
                     $report->save();
-                   
+                    
                         return Redirect::to(route('car-valuation.payment-success', ['report' => $report]));
                     
                     break;

@@ -26,6 +26,18 @@ class ValuationRequest extends FormRequest
             'model' => 'required|string|max:255',
             'year' => 'required|integer|min:1900|max:' . date('Y'),
             'mileage' => 'required|integer|min:0',
+            'vin' => 'nullable|string|size:17|regex:/^[A-HJ-NPR-Z0-9]+$/',
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'vin.size' => 'A VIN must be exactly 17 characters long.',
+            'vin.regex' => 'VIN can only contain letters (except I, O, Q) and numbers.',
         ];
     }
 }

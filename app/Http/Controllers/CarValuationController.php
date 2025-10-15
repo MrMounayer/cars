@@ -7,17 +7,17 @@ use Illuminate\Http\Request;
 use App\Domain\DTOs\InvoiceDTO;
 use App\Http\Requests\ValuationRequest;
 use App\Models\{Car,CarValuationReport};
-use App\Services\CarValuationService;
+use App\Services\{CarValuationService};
 use App\Services\Payments\PaymentService;
 
 
 class CarValuationController extends Controller
 {
 
-    public function __construct(private CarValuationService $valuationService,private PaymentService $paymentService)
-    {
-
-    }
+    public function __construct(
+        private CarValuationService $valuationService,
+        private PaymentService $paymentService,
+    ) {}
 
     public function showForm()
     {
@@ -36,16 +36,9 @@ class CarValuationController extends Controller
             'make' => $validated['make'],
             'model' => $validated['model'],
             'year' => $validated['year'],
-            // 'min_value' => $valuation['min'],
-            // 'max_value' => $valuation['max'],
-            // 'average_value' => ($valuation['min'] * 0.4 + $valuation['max'] * 0.6),
-            "reference" => $customerReference,
-            'additional_data' => [
-                // 'mileage' => $validated['mileage'],
-                // 'market_demand' => $valuation['market_demand'] ?? 'moderate',
-                // 'similar_listings' => $valuation['similar_listings'] ?? rand(3, 15),
-                // 'days_on_market' => $valuation['days_on_market'] ?? rand(20, 45),
-            ],
+            'vin'=> $validated['vin'],
+            'reference' => $customerReference,
+            'additional_data' => [],
             'payment_status' => 'pending'
         ]);
 
@@ -56,7 +49,6 @@ class CarValuationController extends Controller
             'report_id' => $report->id
         ]);
 
-        $apiKey = config('services.abt2pay.key');
         $callbackUrl = route('webhook.payment');
         $amount = env('UNLOCK_COST'); // cents
         $vat = 0;

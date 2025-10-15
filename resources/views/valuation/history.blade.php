@@ -42,8 +42,8 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($report->isPaid())
-                                                    <div class="text-sm text-gray-900 dark:text-gray-100">${{ number_format($report->min_value) }} - ${{ number_format($report->max_value) }}</div>
-                                                    <div class="text-sm text-gray-500 dark:text-gray-400">Avg: ${{ number_format($report->average_value) }}</div>
+                                                    <div class="text-sm text-gray-900 dark:text-gray-100">AED {{ number_format($report->min_value) }} - AED {{ number_format($report->max_value) }}</div>
+                                                    <div class="text-sm text-gray-500 dark:text-gray-400">Avg: AED {{ number_format($report->average_value) }}</div>
                                                 @else
                                                     <span class="text-sm text-gray-500 dark:text-gray-400">Locked</span>
                                                 @endif

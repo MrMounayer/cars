@@ -105,15 +105,27 @@
                         @if($report->isPaid() && $report->additional_data)
                             <!-- Market Analysis -->
                             <div class="md:col-span-2 bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Market Analysis</h3>
-                                <div class="prose dark:prose-invert max-w-none">
-                                    @foreach($report->additional_data as $key => $value)
-                                        <div class="mb-4">
-                                            <h4 class="text-base font-medium">{{ Str::title(str_replace('_', ' ', $key)) }}</h4>
-                                            <p>{{ $value }}</p>
-                                        </div>
-                                    @endforeach
-                                </div>
+                                <h2 class="text-xl font-bold mb-4 text-[#1a237e] dark:text-[#90caf9]">Decoded VIN Data</h2>
+                    <div class="overflow-x-auto max-h-96 rounded border border-zinc-200 dark:border-[#3E3E3A] bg-zinc-50 dark:bg-[#1D0002]">
+                        <table class="w-full text-sm">
+                            <thead class="bg-zinc-100 dark:bg-[#161615]">
+                                <tr>
+                                    <th class="px-3 py-2 text-left font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Vehicle Data</th>
+                                    <th class="px-3 py-2 text-left font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($report->additional_data as $item)
+                                @if(!empty($item['Value']))
+                                    <tr class="even:bg-zinc-50 odd:bg-white dark:even:bg-[#161615] dark:odd:bg-[#1D0002]">
+                                        <td class="px-3 py-2 border-b border-zinc-200 dark:border-[#3E3E3A]">{{ $item['Variable'] }}</td>
+                                        <td class="px-3 py-2 border-b border-zinc-200 dark:border-[#3E3E3A]">{{ $item['Value'] }}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                             </div>
                         @endif
                     </div>

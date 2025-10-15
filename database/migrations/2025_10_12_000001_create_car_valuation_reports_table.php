@@ -15,8 +15,7 @@ return new class extends Migration
             $table->string('make');
             $table->string('model');
             $table->integer('year');
-            $table->string('trim')->nullable();
-            $table->string('vin')->nullable()->nullable();
+            $table->string('vin')->nullable();
             $table->decimal('min_value', 10, 2)->nullable();
             $table->decimal('max_value', 10, 2)->nullable();
             $table->decimal('average_value', 10, 2)->nullable();

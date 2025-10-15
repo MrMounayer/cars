@@ -28,6 +28,11 @@
                     <label for="mileage" class="block text-sm font-medium mb-1">Mileage</label>
                     <input type="number" id="mileage" name="mileage" min="0" required class="w-full px-4 py-3 border border-[#1a237e] rounded focus:ring-2 focus:ring-[#1a237e] focus:outline-none text-lg" value="{{ old('mileage') }}">
                 </div>
+                <div>
+                    <label for="vin" class="block text-sm font-medium mb-1">VIN Number (Optional)</label>
+                    <input type="text" id="vin" name="vin" pattern="^[A-HJ-NPR-Z0-9]{17}$" class="w-full px-4 py-3 border border-[#1a237e] rounded focus:ring-2 focus:ring-[#1a237e] focus:outline-none text-lg uppercase" value="{{ old('vin') }}">
+                    <p class="mt-1 text-sm text-gray-500">17 characters, letters (except I, O, Q) and numbers</p>
+                </div>
                 <button type="submit" class="w-full px-6 py-3 bg-[#1a237e] text-white font-semibold rounded-lg shadow hover:bg-[#0d1335] transition-colors text-lg">Get Valuation</button>
             </form>
         </div>
