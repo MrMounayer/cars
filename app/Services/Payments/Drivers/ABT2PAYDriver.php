@@ -26,6 +26,7 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
             'name' => $invoice->getName(),
             'email' => $invoice->getEmail(),
             'phone' => $invoice->getPhone(),
+            'recur'=> false,
             'splitPayment' => false,
             'customerReferenceNumber' => $invoice->getCustomerReferenceNumber(), 
             'test' => true,
@@ -38,9 +39,11 @@ class ABT2PAYDriver implements PaymentGatewayDriverInterface
             'X-Api-Key' => config('services.abt2pay.key'),
         ])->post(config('services.abt2pay.url')."payment/create", $data);
 
+        // dd( $response->json());
+        
         throw_if(
             $response->json('status') == "failed" && !$response->json("alreadyExists"),
-            new ABT2PAYDriverError('Payd payment gateway failed: '. $response->json('message'))
+            new ABT2PAYDriverError('ABT2PAY payment gateway failed: '. $response->json('message'))
         );
 
         return new PaymentDTO([
